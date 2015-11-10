@@ -1,0 +1,19 @@
+extends layout
+
+block content
+    h1 Dallen&apos;s Bukkit Plugins
+    hr
+    nav#sidenav.nav.navbar-left
+        each plugin in plugins.bukkit
+            li
+                a#tab-images(data-toggle='tab', href='#bukkit-#{plugin.name}', onclick="update_toolbar()") #{plugin.name}
+    .container
+      .tab-content
+        each plugin in plugins.bukkit
+            div(id='bukkit-#{plugin.name}' class='tab-pane')
+                h3= plugin.name
+                - var repo = github + plugin.repo;
+                p Visit the 
+                    a(href='#{repo}') GitHub Repo
+                p Download a 
+                    a(href='#{repo}/archive/master.zip') zipfile

@@ -1,7 +1,8 @@
 extends ../layout
 
 block content
-  h1= title
-  p Welcome to #{title}
-  p Wow isnt this cool
-  p some change
+    h1 Dallen's Tunnel
+    div.input-group.container
+        span.input-group-btn
+            button(class='btn btn-default' type='button', onClick='location.href="http://tunnel.dallen.io/?url="+$("#url").val()') Go!
+        input(type='text' placeholder='Tunnel to...' aria-describedby='sizing-addon1').form-control#url

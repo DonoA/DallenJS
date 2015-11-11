@@ -1,6 +1,12 @@
 extends ../layout
 
 block content
-  h1= title
-  p Welcome to #{title}
-  p fancy stats will go here at some point
+    include ./index.jade
+    hr
+    h1= title
+    p Welcome to #{title}
+    p fancy stats will go here at some point
+    p Rows: #{data.rows}
+    p Average row length: #{data.avg_rows}
+    p Data size: #{data.data}
+    p Current index value: #{data.AI}

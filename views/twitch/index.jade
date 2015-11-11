@@ -3,5 +3,4 @@ extends ../layout
 block content
   h1 Twitch Logger
   each user in GLOBAL.Channels
-    button.btn 
-        a(href='/twitch/#{user}') #{user}
+    a(href='/twitch/#{user}').btn.btn-default #{user}

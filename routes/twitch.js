@@ -8,8 +8,9 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/*', function(req, res, next) {
-  db.getTwitchStats(req.path.replace("/", ""));
-  res.render('twitch/user', { title: req.path.replace("/", "") });
+    db.getTwitchStats(req.path.replace("/", ""), function(dat){
+        res.render('twitch/user', {title: req.path.replace("/", ""), data: dat});
+    });//User passed callback 
 });
 
 module.exports = router;

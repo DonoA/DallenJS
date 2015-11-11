@@ -1,10 +1,14 @@
 var express = require('express');
 var getHTTP = require('app/getHTTP');
-var db = require("app/config");
+var db = require("app/dbmanager");
 var router = express.Router();
 
 router.get('/', function(req, res, next) {
     res.render('home/index', { title: 'Dallen\'s Landing' });
+});
+
+router.get('/login', function(req, res, next) {
+    res.render('home/login', { title: 'Dallen\'s Landing' });
 });
 
 router.get('/prj-*', function(req, res, next) {

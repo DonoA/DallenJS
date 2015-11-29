@@ -26,5 +26,9 @@ header.navbar.navbar-default.navbar-fixed-top
         ul.nav.navbar-nav.navbar-right
             li
                 a(href='/login')
-                    span.glyphicon.glyphicon-log-in 
+                  if session.loggedin
+                    span.glyphicon.glyphicon-log-out
+                    = ' Logout'
+                  else
+                    span.glyphicon.glyphicon-log-in
                     = ' Login'

@@ -3,11 +3,18 @@ var db = require("app/dbmanager");
 var router = express.Router();
 
 router.get('/', function(req, res, next) {
-    res.render('home/index', { title: 'Dallen\'s Landing' });
+    res.render('home/index', { title: 'Dallen\'s Landing'});
+    req.session.name = "name";
 });
 
 router.get('/login', function(req, res, next) {
-    res.render('home/login', { title: 'Dallen\'s Landing' });
+  if(req.session.loggedin){
+    req.session.loggedin = false;
+    res.render('home/login', { title: 'Dallen\'s Landing'});
+  }else{
+    req.session.loggedin = true;
+    res.render('home/login', { title: 'Dallen\'s Landing'});
+  }
 });
 
 router.get('/prj-*', function(req, res, next) {

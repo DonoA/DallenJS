@@ -16,6 +16,8 @@
     "morgan": "~1.6.1",
     "serve-favicon": "~2.3.0",
     "mysql": "~2.9.0",
-    "irc": "~0.4.0"
+    "irc": "~0.4.0",
+    "express-session": "~1.12.1",
+    "connect-session-sequelize": "~2.3.1"
   }
 }

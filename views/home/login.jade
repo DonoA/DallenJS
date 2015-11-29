@@ -1,6 +1,7 @@
 extends ../layout
 
 block content
-    h1 Login
-    p Only avalible through Oauth
-    button(onClick="") Login
+  if session.loggedin
+    h1 Logged In!
+  else
+    h1 Logged Out!

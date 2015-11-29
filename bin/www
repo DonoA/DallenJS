@@ -10,7 +10,6 @@ var app = require('../app');
 var debug = require('debug')('DallenJS:server');
 var http = require('http');
 var twitch = require('app/twitch');
-var getHTTP = require('app/getHTTP');
 
 /**
  * Get port from environment and store in Express.

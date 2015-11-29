@@ -1,5 +1,4 @@
 var express = require('express');
-var getHTTP = require('app/getHTTP');
 var db = require("app/dbmanager");
 var router = express.Router();
 

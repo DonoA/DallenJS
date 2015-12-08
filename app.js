@@ -8,6 +8,19 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var fs = require('fs');
 var SequelizeStore = require('connect-session-sequelize')(session.Store);
+var updates = require('app/updates');
+var CronJob = require('cron').CronJob;
+
+/*
+var job = new CronJob({
+  cronTime: '00 * 7-21 * * 1-5',
+  onTick: function() {
+    updates.sendupdate("test message");
+  },
+  timeZone: 'America/Denver'
+});
+job.start();
+*/
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -91,6 +104,5 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
 
 module.exports = app;

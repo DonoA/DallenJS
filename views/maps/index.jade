@@ -1,6 +1,9 @@
 extends ../layout
 
 block content
-    h1 Maps
-    p Welcome to the map page
-    p This is a placeholder for future maps
+    h1(align='center') Maps
+    div(align='center')
+      a(onClick='$("#mapFrame").attr("src", "/Maps/html/Illeos.html");').btn.btn-default Illeos
+      a(onClick='$("#mapFrame").attr("src", "/Maps/html/Arda.html");').btn.btn-default Arda
+    br
+    iframe(src='/Maps/html/Illeos.html')#mapFrame

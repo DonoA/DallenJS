@@ -8,3 +8,20 @@ body {
     display: table-cell;
     vertical-align: middle;
 }
+
+iframe#mapFrame {
+  position:fixed;
+  top: 175px;
+  left: 5%;
+  bottom: 5px;
+  right: 5%;
+  width: 90%;
+  height:70%;
+  border: black;
+  border-width: 2px;
+  border-style: solid;
+  margin:0;
+  padding:0;
+  overflow:hidden;
+  z-index:999999;
+}

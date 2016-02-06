@@ -1,4 +1,8 @@
-extends layout
+extends ../layout
+
+block head
+  script.
+    function update_toolbar(){$("#sidenav").find(".active").each(function(i, ele) {$(ele).removeClass("active");});}
 
 block content
     h1 Minecraft Middle Earth Spigot Plugins
@@ -13,7 +17,6 @@ block content
             div(id='mcme-#{plugin.name}' class='tab-pane')
                 h3= plugin.name
                 - var repo = github + plugin.repo;
-                p Visit the 
-                    a(href='#{repo}') GitHub Repo
-                p Download a 
-                    a(href='#{repo}/archive/master.zip') zipfile
+                a(href='#{repo}') Visit the GitHub Repo
+                br
+                a(href='#{repo}/archive/master.zip') Download a zipfile

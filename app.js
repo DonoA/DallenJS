@@ -23,6 +23,7 @@ job.start();
 */
 
 var routes = require('./routes/index');
+var images = require('./routes/images');
 var users = require('./routes/users');
 var twitch = require('./routes/twitch');
 var tunnel = require('./routes/tunnel');
@@ -68,6 +69,7 @@ app.use(function(req,res,next){
 });
 
 app.use('/', routes);
+app.use('/images', images);
 app.use('/users', users);
 app.use('/twitch', twitch);
 app.use('/tunnel', tunnel);

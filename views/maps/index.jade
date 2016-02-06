@@ -3,7 +3,10 @@ extends ../layout
 block content
     h1(align='center') Maps
     div(align='center')
-      a(onClick='$("#mapFrame").attr("src", "/Maps/html/Illeos.html");').btn.btn-default Illeos
-      a(onClick='$("#mapFrame").attr("src", "/Maps/html/Arda.html");').btn.btn-default Arda
+      each m in maps
+        if map == m
+          a(onClick='MapController("#{m}", this);').btn.btn-default.active#mapbtn #{m}
+        else
+          a(onClick='MapController("#{m}", this);').btn.btn-default#mapbtn #{m}
     br
-    iframe(src='/Maps/html/Illeos.html')#mapFrame
+    iframe(src="/Maps/html/#{map}.html")#mapFrame

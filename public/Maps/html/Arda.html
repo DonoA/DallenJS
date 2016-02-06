@@ -130,7 +130,7 @@
                 return null;
               }
               if (x < 0 || x >= tileRange) {
-                return null;
+                x = (x % tileRange + tileRange) % tileRange;
               }
               return {
                 x: x,

@@ -5,6 +5,7 @@ var auth = require('app/auth.js');
 var google = require('googleapis');
 var OAuth2 = google.auth.OAuth2;
 var fs = require('fs');
+var os = require("os");
 
 router.get('/', function(req, res, next) {
     res.render('home/index', { title: 'Dallen\'s Landing'});
@@ -17,13 +18,13 @@ router.get('/login', function(req, res, next) {
     res.redirect(backURL);
   }else{
     req.session.continue = req.query.continue;
-    res.redirect(auth.Init());
+    res.redirect(auth.Init(req.headers.host));
   }
 });
 
 router.get('/login/authcallback*', function(req, res, next) {
   var google_auth = JSON.parse(fs.readFileSync('config.json', 'utf8')).google_secrets.web;
-  var oauthC = new OAuth2(google_auth.client_id, google_auth.client_secret, "http://localhost:800/login/authcallback");
+  var oauthC = new OAuth2(google_auth.client_id, google_auth.client_secret, "http://"+req.headers.host+"/login/authcallback");
   oauthC.getToken(req.query.code, function(err, tokens) {
     if(!err) {
       oauthC.setCredentials(tokens);

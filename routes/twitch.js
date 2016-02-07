@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var db = require('app/dbmanager');
+var db = require('app/dbmanager.js');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -10,7 +10,7 @@ router.get('/', function(req, res, next) {
 router.get('/*', function(req, res, next) {
     db.getTwitchStats(req.path.replace("/", ""), function(dat){
         res.render('twitch/user', {title: req.path.replace("/", ""), data: dat});
-    });//User passed callback 
+    });//User passed callback
 });
 
 module.exports = router;

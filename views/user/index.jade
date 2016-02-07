@@ -1,0 +1,8 @@
+extends ../layout
+
+block content
+    .container
+      each u, i in users
+        li
+          p=u
+          a(href='/users/edit/#{u.username}') #{u.username}

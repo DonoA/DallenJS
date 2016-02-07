@@ -27,8 +27,8 @@ header.navbar.navbar-default.navbar-fixed-top
                 a(href='/prj-games') Archives
         ul.nav.navbar-nav.navbar-right
             li
-                a(href='/login')
-                  if session.loggedin
+                a(href='/login?continue=')#login
+                  if session.profile != null
                     span.glyphicon.glyphicon-log-out
                     = ' Logout'
                   else

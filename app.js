@@ -8,7 +8,7 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var fs = require('fs');
 var SequelizeStore = require('connect-session-sequelize')(session.Store);
-var updates = require('app/updates');
+var updates = require('app/updates.js');
 var CronJob = require('cron').CronJob;
 
 /*

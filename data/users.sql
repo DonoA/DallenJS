@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `Email` varchar(200) NOT NULL,
   `user_type` varchar(15) NOT NULL DEFAULT 'Guest',
   `join_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `GoogleID` varchar(25) NOT NULL,
   PRIMARY KEY (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 

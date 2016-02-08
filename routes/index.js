@@ -6,6 +6,7 @@ var google = require('googleapis');
 var OAuth2 = google.auth.OAuth2;
 var fs = require('fs');
 var os = require("os");
+var user = require("app/user.js");
 
 router.get('/', function(req, res, next) {
     res.render('home/index', { title: 'Dallen\'s Landing'});
@@ -33,6 +34,19 @@ router.get('/login/authcallback*', function(req, res, next) {
       auth.getUser(oauthC, function(profile){
         req.session.tokens = tokens;
         req.session.profile = profile;
+        var userdat = user.getUser(profile.id, function(dat){
+          if(dat.length == 0){
+            return user.addUser(profile, profile.displayName.replace(" ", "_"), function(data){
+              return user.getUser(profile.id, function(udat){
+                return udat[0];
+              });
+            });
+          }else{
+            return dat[0];
+          }
+        });
+        console.log(userdat);
+        req.session.profile.userdat = userdat;
         res.redirect(req.session.continue);
       });
     }else{

@@ -1,0 +1,32 @@
+doctype html
+html
+  head
+    title= title
+    include ../layouts/head.jade
+    block head
+
+  body
+    include ../layouts/header.jade
+    br
+    section.content
+      header.wikihead
+        a(href='/illeos')
+          img(src='/logo.png' width='200px' height='60px')
+        nav.wikinav
+          li.wikinav.spacer
+          li.wikinav
+            a.btn.btn-default(href='/illeos/random') Random Page
+          li.wikinav.spacer
+          li.wikinav
+            a.btn.btn-default(href='/illeos/index') Page Index
+          li.wikinav.spacer
+          li.wikinav
+            a.btn.btn-default(href='/illeos/about') About
+          li.wikinav.spacer
+          li.wikinav
+            a.btn.btn-default(href='/illeos/#{feature}') Featured
+        div.stats
+          p 0 Current Pages
+          p Launched 2/21/2016
+      div
+        block content

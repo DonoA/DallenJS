@@ -11,16 +11,16 @@ var SequelizeStore = require('connect-session-sequelize')(session.Store);
 var updates = require('app/updates.js');
 var CronJob = require('cron').CronJob;
 
-/*
+
 var job = new CronJob({
-  cronTime: '00 * 7-21 * * 1-5',
+  cronTime: '00 00 * * * *',
   onTick: function() {
-    updates.sendupdate("test message");
+
   },
   timeZone: 'America/Denver'
 });
 job.start();
-*/
+
 
 var routes = require('./routes/index');
 var images = require('./routes/images');
@@ -50,7 +50,7 @@ sequelize.sync();
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({

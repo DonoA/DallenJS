@@ -1,8 +1,49 @@
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-color: white;
 }
 
 a {
   color: #00B7FF;
+}
+
+
+.content {
+  width: 1238px;
+}
+.card {
+  border-radius: 25px;
+  border: 1px solid #54C571;
+  background-color: #54C571;
+  padding: 15px;
+}
+.centered {
+  align-self: center;
+  align-content: center;
+  text-align: center;
+}
+.stats{
+  padding-top: 5px;
+  float: right;
+}
+.spacer{
+  padding-left: 30px;
+}
+.wikinav {
+  display: inline-block;
+}
+
+.homecontent {
+  float: left;
+  width: 69%;
+}
+.sidebar {
+  margin-top: 20px;
+  width: 29%;
+  float: right;
+  border: 1px solid #347C2C;
+  background-color: #89C35C;
+  padding: 15px;
+  color: white;
 }

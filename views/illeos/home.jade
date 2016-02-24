@@ -1,7 +1,13 @@
-extends ../layout
+extends ./layout
 
 block content
+  div.homecontent
     h1 Illeos Wiki
     p Welcome to the Illeos Wiki
-    p I am currently working on some Wiki software to run a Wiki on Illeos soon.
-    p Once its ready pages will start popping up.
+    p.card Currently there are very few pages, it's not totally designed for the public to edit (I don't really expect anyone
+      to want to) but if you really want to you should login with your google account and send me an email...
+  div.sidebar
+    p.card.centered
+      b Recent Changes
+    ul
+      li [Page Name] Some change

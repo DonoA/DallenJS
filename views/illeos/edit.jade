@@ -1,0 +1,28 @@
+extends ./layout
+
+block content
+    form(method="post")
+      h1 Editing #{page.name}
+      span Page id:
+        p(name="pageid" value="#{page.pageid}")= page.pageid
+      span Page Url:
+        p(name="url" value="#{page.url}")= page.url
+      hr
+      h3 Name
+      input(name="name" value="#{page.name}")
+      br
+      br
+      h3 Template
+      p
+        input(type="radio" name="template" checked)
+        Text with specifics box
+      br
+      p
+        input(type="radio" name="template")
+        Full text
+      br
+      hr
+      textarea(name="content").tinymce= page.content
+      br
+      div.centered
+        input(type="submit" value="Submit Page").centered.btn

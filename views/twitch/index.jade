@@ -1,6 +1,7 @@
 extends ../layout
 
 block content
-  h1 Twitch Logger
-  each user in GLOBAL.Channels
-    a(href='/twitch/#{user}').btn.btn-default #{user}
+  section.centered
+    h1 Twitch Logger
+    each user in GLOBAL.Channels
+      a(href='/twitch/#{user}').btn.btn-default.centered #{user}

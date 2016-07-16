@@ -25,7 +25,7 @@ router.get('/login', function(req, res, next) {
 
 router.get('/login/authcallback*', function(req, res, next) {
   var google_auth = JSON.parse(fs.readFileSync('config.json', 'utf8')).google_secrets.web;
-  var oauthC = new OAuth2(google_auth.client_id, google_auth.client_secret, "http://"+req.headers.host+"/login/authcallback");
+  var oauthC = new OAuth2(google_auth.client_id, google_auth.client_secret, "https://"+req.headers.host+"/login/authcallback");
   oauthC.getToken(req.query.code, function(err, tokens) {
     if(!err) {
       oauthC.setCredentials(tokens);

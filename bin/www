@@ -8,11 +8,12 @@ var config = require('app/dbmanager.js');
 config.pullDB();
 var app = require('../app');
 var debug = require('debug')('DallenJS:server');
-var http = require('http');
+var https = require('https');
 var twitch = require('app/twitch.js');
 var updates = require('app/updates.js');
 var auth = require('app/auth.js');
 var users = require('app/user.js');
+var fs = require('fs');
 
 users.connect();
 
@@ -28,8 +29,11 @@ app.set('port', port);
 /**
  * Create HTTP server.
  */
-
-var server = http.createServer(app);
+ var options = {
+     key: fs.readFileSync("./ssl/privkey.pem"),
+     cert: fs.readFileSync("./ssl/cert.pem")
+ };
+var server = https.createServer(options, app);
 
 /**
  * Listen on provided port, on all network interfaces.

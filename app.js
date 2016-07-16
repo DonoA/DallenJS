@@ -1,4 +1,5 @@
 var express = require('express');
+var redis = require("redis");
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -6,8 +7,9 @@ var Sequelize = require('sequelize');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
+var RedisStore = require('connect-redis')(session);
+var client  = redis.createClient();
 var fs = require('fs');
-var SequelizeStore = require('connect-session-sequelize')(session.Store);
 var updates = require('app/updates.js');
 var CronJob = require('cron').CronJob;
 
@@ -53,14 +55,24 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+// app.use(session({
+//   secret: JSON.parse(fs.readFileSync('config.json', 'utf8')).secrets.sessionKey,
+//   resave: false,
+//   saveUninitialized: true,
+//   store: new SequelizeStore({
+//     db: sequelize
+//   }),
+//   cookie: { secure: false } //TODO make conn secure and allow nginx proxy
+// }));
 app.use(session({
-  secret: JSON.parse(fs.readFileSync('config.json', 'utf8')).secrets.sessionKey,
-  resave: false,
-  saveUninitialized: true,
-  store: new SequelizeStore({
-    db: sequelize
-  }),
-  cookie: { secure: false } //TODO make conn secure and allow nginx proxy
+    store: new RedisStore({
+      host: "localhost",
+      port: 6379,
+      client: client,
+      saveUninitialized: false,
+      resave: false
+    }),
+    secret: JSON.parse(fs.readFileSync('config.json', 'utf8')).secrets.sessionKey
 }));
 
 app.use(function(req,res,next){

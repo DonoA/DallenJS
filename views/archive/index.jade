@@ -1,0 +1,18 @@
+extends ../layout
+
+block head
+  script.
+    function update_toolbar(){$("#sidenav").find(".active").each(function(i, ele) {$(ele).removeClass("active");});}
+
+block content
+    h1 Archive
+    hr
+    nav#sidenav.nav.navbar-left
+      each item in items
+        li
+          a#tab-images(data-toggle='tab', href='#card-#{item.name}', onclick="update_toolbar()") #{item.name}
+    .container
+      .tab-content
+        each item in items
+            div(id='card-#{item.name}' class='tab-pane')
+                h3= item.name

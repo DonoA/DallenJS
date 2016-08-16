@@ -5,8 +5,10 @@ block content
     div(align='center')
       each m in maps
         if map == m
-          a(onClick='MapController("#{m}", this);').btn.btn-default.active#mapbtn #{m}
+          a(onClick='MapController("#{m.name}", this);').btn.btn-default.active#mapbtn #{m.name}
         else
-          a(onClick='MapController("#{m}", this);').btn.btn-default#mapbtn #{m}
+          a(onClick='MapController("#{m.name}", this);').btn.btn-default#mapbtn #{m.name}
+      if session.user && session.user.admin
+        a(href='/maps/new').btn.btn-default New Map
     br
-    iframe(src="/Maps/html/#{map}.html")#mapFrame
+    iframe(src="/Maps/html/#{map.name}.html")#mapFrame

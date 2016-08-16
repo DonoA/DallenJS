@@ -11,7 +11,5 @@ block content
         ul(style='left: 0px; top: 0px;')
           each val in imgs
             li
-              img(src='/images/#{val}', width='600', height='400', alt='val')
+              img(src='/images/#{val}', width='600', height='400', alt='#{val}')
       p.jcarousel-pagination
-    a.jcarousel-control-prev(href='#') ‹=
-    a.jcarousel-control-next(href='#') =›

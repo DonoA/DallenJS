@@ -9,10 +9,13 @@ header.navbar.navbar-default.navbar-fixed-top
                 a(class='dropdown-toggle' data-toggle='dropdown' href='#' id='btn-prj-drop') Projects&nbsp;
                     b.caret &nbsp;
                 ul#drop.dropdown-menu.dropdown-menu-one-column
-                    li#mcme-bukkit
-                        a(href='/prj-mcme-bukkit') MCME Bukkit
-                    li#bukkit
-                        a(href='/prj-bukkit') Bukkit
+                    each prj in prjtyps
+                      - var p = prj.type
+                      li(id='#{p}')
+                        a(href='/prj/#{p}') #{p}
+                    if session.user && session.user.admin
+                      li(id='new')
+                        a(href='/prj/new') New Project
             li#map-I
                 a(href='/maps') Maps
             li#twitch
@@ -24,11 +27,11 @@ header.navbar.navbar-default.navbar-fixed-top
             li#tunnel
                 a(href='/tunnel') Tunnel
             li#tunnel
-                a(href='/prj-games') Archives
+                a(href='/archive') Archives
         ul.nav.navbar-nav.navbar-right
             li
                 a(href='/login?continue=')#login
-                  if session.user != null
+                  if session.user
                     span.glyphicon.glyphicon-log-out
                     = ' Logout ' + session.user.name
                   else

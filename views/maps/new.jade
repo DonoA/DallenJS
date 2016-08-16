@@ -1,0 +1,17 @@
+extends ../layout
+
+block content
+  h1(align='center') New Map
+  form(align='left' method='post')
+    span Name
+    br
+    input(name='name' required).form-control
+    br
+    br
+    span URL (optional)
+    br
+    input(name='url').form-control
+    br
+    br
+    div(align='center')
+      input(type='submit' value='Save').btn

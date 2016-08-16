@@ -2,15 +2,15 @@ var express = require('express');
 var router = express.Router();
 var db = require('app/dbmanager.js');
 
-/* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('twitch/index', { title: 'Twitch' });
+  console.log(db.streams);
+  res.render('twitch/index', { title: 'Twitch', channels: Object.keys(db.streams) });
 });
 
-router.get('/*', function(req, res, next) {
-    db.getTwitchStats(req.path.replace("/", ""), function(dat){
-        res.render('twitch/user', {title: req.path.replace("/", ""), data: dat});
-    });//User passed callback
+router.get('/:user', function(req, res, next) {
+    db.getTwitchStats(req.params.user, function(dat){
+        res.render('twitch/user', { title: req.params.user, data: dat, channels: Object.keys(db.streams) });
+    });
 });
 
 module.exports = router;

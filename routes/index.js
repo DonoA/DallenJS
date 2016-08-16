@@ -10,7 +10,11 @@ var os = require("os");
 var google_auth = JSON.parse(fs.readFileSync('config.json', 'utf8')).google_secrets.web;
 
 router.get('/', function(req, res, next) {
-    res.render('home/index', { title: 'Dallen\'s Landing'});
+    res.render('home/index');
+});
+
+router.get('/restricted', function(req, res, next) {
+    res.render('noperm');
 });
 
 router.get('/login', function(req, res, next) {
@@ -59,8 +63,8 @@ router.get('/tunnel', function(req, res, next) {
   res.render('tunnel/index', { title: 'Tunnel' });
 });
 
-router.get('/upDB', function(req, res, next) {
-    res.render('home/update', { title: 'Dallen\'s Landing', status: db.pullDB()});
-});
+// router.get('/upDB', function(req, res, next) {
+//     res.render('home/update', { title: 'Dallen\'s Landing', status: db.pullDB()});
+// });
 
 module.exports = router;

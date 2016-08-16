@@ -3,12 +3,14 @@ var redis = require("redis");
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
+var Sequelize = require('sequelize');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var RedisStore = require('connect-redis')(session);
 var client  = redis.createClient();
 var fs = require('fs');
+var db = require("app/dbmanager.js");
 // var updates = require('app/updates.js');
 // var CronJob = require('cron').CronJob;
 //
@@ -26,10 +28,11 @@ var routes = require('./routes/index');
 var images = require('./routes/images');
 var users = require('./routes/users');
 var twitch = require('./routes/twitch');
-var tunnel = require('./routes/tunnel');
 var maps = require('./routes/maps');
 var illeos = require('./routes/illeos');
 var projects = require('./routes/projects');
+var projects = require('./routes/archive');
+
 
 var app = express();
 
@@ -55,10 +58,22 @@ app.use(session({
     secret: JSON.parse(fs.readFileSync('config.json', 'utf8')).secrets.sessionKey
 }));
 
+var prjtypCache;
+
 app.use(function(req,res,next){
-    res.locals.session = req.session;
-    res.locals.prjtyps = ["MCME", "BUKKIT"];
+  res.locals.session = req.session;
+  if(!prjtypCache){
+    db.projects.findAll({
+      attributes: [[Sequelize.literal('DISTINCT `type`'), 'type']]
+    }).then(typs => {
+      prjtypCache = typs;
+      res.locals.prjtyps = prjtypCache;
+      next();
+    });
+  }else{
+    res.locals.prjtyps = prjtypCache;
     next();
+  }
 });
 
 app.use('/', routes);
@@ -66,9 +81,10 @@ app.use('/prj', projects)
 app.use('/images', images);
 app.use('/users', users);
 app.use('/twitch', twitch);
-app.use('/tunnel', tunnel);
 app.use('/maps', maps);
 app.use('/illeos', illeos);
+app.use('/archive', archive);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

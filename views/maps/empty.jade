@@ -1,0 +1,10 @@
+extends ../layout
+
+block content
+  h1(align='center') Maps
+  if session.user && session.user.admin
+    div(align='center')
+      a(href='/maps/new').btn.btn-default#mapbtn New Map
+  br
+  br
+  h3(align='center') There don't appear to be any maps here at the moment!

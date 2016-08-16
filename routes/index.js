@@ -6,15 +6,16 @@ var google = require('googleapis');
 var OAuth2 = google.auth.OAuth2;
 var fs = require('fs');
 var os = require("os");
-var user = require("app/user.js");
+
+var google_auth = JSON.parse(fs.readFileSync('config.json', 'utf8')).google_secrets.web;
 
 router.get('/', function(req, res, next) {
     res.render('home/index', { title: 'Dallen\'s Landing'});
 });
 
 router.get('/login', function(req, res, next) {
-  if(req.session.profile != null){
-    req.session.profile = null;
+  if(req.session.user != null){
+    req.session.user = null;
     backURL=req.header('Referer') || '/';
     res.redirect(backURL);
   }else{
@@ -24,30 +25,27 @@ router.get('/login', function(req, res, next) {
 });
 
 router.get('/login/authcallback*', function(req, res, next) {
-  var google_auth = JSON.parse(fs.readFileSync('config.json', 'utf8')).google_secrets.web;
-  var oauthC = new OAuth2(google_auth.client_id, google_auth.client_secret, "https://"+req.headers.host+"/login/authcallback");
+  var oauthC = new OAuth2(google_auth.client_id, google_auth.client_secret, GLOBAL.http+"://"+req.headers.host+"/login/authcallback");
   oauthC.getToken(req.query.code, function(err, tokens) {
     if(!err) {
       oauthC.setCredentials(tokens);
-      console.log(oauthC);
-      req.session.user = "user";
       auth.getUser(oauthC, function(profile){
-        req.session.tokens = tokens;
-        req.session.profile = profile;
-        var userdat = user.getUser(profile.id, function(dat){
-          if(dat.length == 0){
-            return user.addUser(profile, profile.displayName.replace(" ", "_"), function(data){
-              return user.getUser(profile.id, function(udat){
-                return udat[0];
-              });
-            });
-          }else{
-            return dat[0];
+        db.users.findOrCreate({
+          where: {
+            email: profile.emails[0].value
+          },
+          defaults: {
+            name: profile.displayName,
+            email: profile.emails[0].value,
+            icon: profile.image.url
           }
+        }).then(function(usr){
+          req.session.user = {
+            name: usr[0].name,
+            admin: usr[0].admin
+          };
+          res.redirect(req.session.continue);
         });
-        console.log(userdat);
-        req.session.profile.userdat = userdat;
-        res.redirect(req.session.continue);
       });
     }else{
       res.render('error', { message: "Authentication Failed, please try again", error: {status: 500}})
@@ -55,8 +53,10 @@ router.get('/login/authcallback*', function(req, res, next) {
   });
 });
 
-router.get('/prj-*', function(req, res, next) {
-    res.render('home/' + req.path.replace("/prj-", ""), {title: 'Dallen\'s Landing', plugins: GLOBAL.plugins, github: "https://github.com/DonoA/"});
+
+
+router.get('/tunnel', function(req, res, next) {
+  res.render('tunnel/index', { title: 'Tunnel' });
 });
 
 router.get('/upDB', function(req, res, next) {

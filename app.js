@@ -3,25 +3,23 @@ var redis = require("redis");
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
-var Sequelize = require('sequelize');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var RedisStore = require('connect-redis')(session);
 var client  = redis.createClient();
 var fs = require('fs');
-var updates = require('app/updates.js');
-var CronJob = require('cron').CronJob;
-
-
-var job = new CronJob({
-  cronTime: '00 00 * * * *',
-  onTick: function() {
-
-  },
-  timeZone: 'America/Denver'
-});
-job.start();
+// var updates = require('app/updates.js');
+// var CronJob = require('cron').CronJob;
+//
+// var job = new CronJob({
+//   cronTime: '00 00 * * * *',
+//   onTick: function() {
+//
+//   },
+//   timeZone: 'America/Denver'
+// });
+// job.start();
 
 
 var routes = require('./routes/index');
@@ -31,6 +29,7 @@ var twitch = require('./routes/twitch');
 var tunnel = require('./routes/tunnel');
 var maps = require('./routes/maps');
 var illeos = require('./routes/illeos');
+var projects = require('./routes/projects');
 
 var app = express();
 
@@ -38,32 +37,13 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-var sqlConn = JSON.parse(fs.readFileSync('config.json', 'utf8')).sqlConn;
-
-var sequelize = new Sequelize(
-  sqlConn.database,
-  sqlConn.user,
-  sqlConn.password, {
-      "dialect": "mysql"
-});
-
-sequelize.sync();
-
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-// app.use(session({
-//   secret: JSON.parse(fs.readFileSync('config.json', 'utf8')).secrets.sessionKey,
-//   resave: false,
-//   saveUninitialized: true,
-//   store: new SequelizeStore({
-//     db: sequelize
-//   }),
-//   cookie: { secure: false } //TODO make conn secure and allow nginx proxy
-// }));
+
 app.use(session({
     store: new RedisStore({
       host: "localhost",
@@ -77,10 +57,12 @@ app.use(session({
 
 app.use(function(req,res,next){
     res.locals.session = req.session;
+    res.locals.prjtyps = ["MCME", "BUKKIT"];
     next();
 });
 
 app.use('/', routes);
+app.use('/prj', projects)
 app.use('/images', images);
 app.use('/users', users);
 app.use('/twitch', twitch);

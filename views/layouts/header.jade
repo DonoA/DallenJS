@@ -28,9 +28,9 @@ header.navbar.navbar-default.navbar-fixed-top
         ul.nav.navbar-nav.navbar-right
             li
                 a(href='/login?continue=')#login
-                  if session.profile != null
+                  if session.user != null
                     span.glyphicon.glyphicon-log-out
-                    = ' Logout ' + session.profile.displayName
+                    = ' Logout ' + session.user.name
                   else
                     span.glyphicon.glyphicon-log-in
                     = ' Login'

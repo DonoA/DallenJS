@@ -4,20 +4,20 @@
  * Module dependencies.
  */
 
-var config = require('app/dbmanager.js');
-config.pullDB();
+var db = require('app/dbmanager.js');
 var app = require('../app');
 var debug = require('debug')('DallenJS:server');
 var http = require('http');
 var twitch = require('app/twitch.js');
 var updates = require('app/updates.js');
 var auth = require('app/auth.js');
-var users = require('app/user.js');
 var fs = require('fs');
 
-users.connect();
+db.init();
 
-GLOBAL.oauths = [];
+// GLOBAL.oauths = [];
+
+GLOBAL.http = process.env.http || "http"
 
 /**
  * Get port from environment and store in Express.
@@ -29,6 +29,7 @@ app.set('port', port);
 /**
  * Create HTTP server.
  */
+
 var server = http.createServer(app);
 
 /**

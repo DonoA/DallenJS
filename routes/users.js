@@ -3,21 +3,20 @@ var router = express.Router();
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  if(req.session.profile.userdat.user_type == "admin"){
+  if(req.session.user && req.session.user.admin){
     user.listUsers(function(data){
       res.render('user/index', {title: "users", users: data});
     });
   }else{
-    res.render('noperm.jade', {title: "Permission Denied"});
+    res.redirect('/restricted');
   }
 });
 
-router.get('/edit/*', function(req, res, next) {
-  if(req.session.profile.userdat.user_type == "admin"){
-    var user = req.path.replace("/edit/", "");
-    res.render('user/edit', {title: "users", user: user});
+router.get('/edit/:user', function(req, res, next) {
+  if(req.session.user && req.session.user.admin){
+    res.render('user/edit', {title: "users", user: req.perams.user});
   }else{
-    res.render('noperm.jade', {title: "Permission Denied"});
+    res.redirect('/restricted');
   }
 });
 

@@ -17,6 +17,13 @@ router.get('/restricted', function(req, res, next) {
     res.render('noperm');
 });
 
+router.get('/uploads/:path/:name', function(req, res, next) {
+  console.log('download', req.params.path);
+  res.download('uploads/'+req.params.path+'/'+req.params.name);
+});
+
+module.exports = router;
+
 router.get('/login', function(req, res, next) {
   if(req.session.user != null){
     req.session.user = null;

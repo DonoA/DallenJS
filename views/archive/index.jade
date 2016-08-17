@@ -16,7 +16,12 @@ block content
     .container
       .tab-content.content-card
         each item in items
-            div(id='card-#{item.name}' class='tab-pane')
+          div(id='card-#{item.name}' class='tab-pane')
+            if session.user && session.user.admin
               .archive-edit
                 a(href="/archive/#{item.name}/edit").btn.btn-default.centered Edit
-              h3= item.name
+            h3= item.name
+            p= item.description
+            each dl in item.downloads
+              a(href='#{dl.url}') Download #{dl.name}
+              br

@@ -26,6 +26,20 @@ iframe#mapFrame {
   z-index:999999;
 }
 
+.nav-bar {
+  width: 10%;
+}
+
+.content-card {
+  width: 90%;
+  float: right;
+}
+
+.archive-edit {
+  float: right;
+  position: static;
+}
+
 .jcarousel-wrapper {
     margin: 20px auto;
     position: relative;

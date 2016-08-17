@@ -7,12 +7,16 @@ block head
 block content
     h1 Archive
     hr
-    nav#sidenav.nav.navbar-left
+    nav#sidenav.nav.navbar-left.nav-bar
       each item in items
         li
           a#tab-images(data-toggle='tab', href='#card-#{item.name}', onclick="update_toolbar()") #{item.name}
+      li
+        a#tab-images(href='/archive/new') New Archive
     .container
-      .tab-content
+      .tab-content.content-card
         each item in items
             div(id='card-#{item.name}' class='tab-pane')
-                h3= item.name
+              .archive-edit
+                a(href="/archive/#{item.name}/edit").btn.btn-default.centered Edit
+              h3= item.name

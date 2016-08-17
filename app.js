@@ -31,7 +31,7 @@ var twitch = require('./routes/twitch');
 var maps = require('./routes/maps');
 var illeos = require('./routes/illeos');
 var projects = require('./routes/projects');
-var projects = require('./routes/archive');
+var archive = require('./routes/archive');
 
 
 var app = express();

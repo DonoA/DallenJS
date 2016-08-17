@@ -17,8 +17,8 @@ router.get('/new', function(req, res, next) {
 
 router.post('/new', function(req, res, next) {
   if(req.session.user && req.session.user.admin){
-    console.log(req.body);
     db.projects.create(req.body).then(rtn => {
+      
       res.redirect('/prj/' + req.body.type);
     });
   }else{

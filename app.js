@@ -62,7 +62,7 @@ var prjtypCache;
 
 app.use(function(req,res,next){
   res.locals.session = req.session;
-  if(!prjtypCache){
+  // if(!prjtypCache){
     db.projects.findAll({
       attributes: [[Sequelize.literal('DISTINCT `type`'), 'type']]
     }).then(typs => {
@@ -70,11 +70,13 @@ app.use(function(req,res,next){
       res.locals.prjtyps = prjtypCache;
       next();
     });
-  }else{
-    res.locals.prjtyps = prjtypCache;
-    next();
-  }
+  // }else{
+  //   res.locals.prjtyps = prjtypCache;
+  //   next();
+  // }
 });
+
+
 
 app.use('/', routes);
 app.use('/prj', projects)

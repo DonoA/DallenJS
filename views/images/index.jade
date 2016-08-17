@@ -6,10 +6,9 @@ block head
 
 block content
     h1(align='center') Image Gallery
-    .jcarousel-wrapper
-      .jcarousel
-        ul(style='left: 0px; top: 0px;')
-          each val in imgs
-            li
-              img(src='/images/#{val}', width='600', height='400', alt='#{val}')
-      p.jcarousel-pagination
+    div.image-viewer
+      each img in imgs
+        img(src='/images/#{img}' alt='#{img}').viewer-image
+    div(align='center')
+      button#back-arrow.btn.btn-default Back
+      button#next-arrow.btn.btn-default Next

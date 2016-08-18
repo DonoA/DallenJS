@@ -10,7 +10,10 @@ block content
     br
     span Project Category
     br
-    input(name='type' required).form-control
+    if type
+      input(name='type' value='#{type}' readonly required).form-control
+    else
+      input(name='type' required).form-control
     br
     br
     span Repo Url (optional)

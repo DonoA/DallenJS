@@ -10,14 +10,17 @@ block content
     nav#sidenav.nav.navbar-left.nav-bar
       each item in items
         li
-          a#tab-images(data-toggle='tab', href='#card-#{item.name}', onclick="update_toolbar()") #{item.name}
+          a#tab-images(data-toggle='tab', href='#card-#{item.name.replace(" ", "-")}', onclick="update_toolbar()") #{item.name}
+      if session.user && session.user.admin
+        li
+          a#tab-images(href='/prj/new/?type=#{items[0].type}', onclick="update_toolbar()") New Project
     .container
       .tab-content.content-card
         each item in items
-          div(id='card-#{item.name}' class='tab-pane')
+          div(id='card-#{item.name.replace(" ", "-")}' class='tab-pane')
             if session.user && session.user.admin
               .archive-edit
-                a(href="/archive/#{item.name}/edit").btn.btn-default.centered Edit
+                a(href="/prj/#{item.type}/#{item.name}/edit").btn.btn-default.centered Edit
             h3= item.name
             p= item.description
             if item.repo

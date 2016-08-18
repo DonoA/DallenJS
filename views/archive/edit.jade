@@ -1,0 +1,27 @@
+extends ../layout
+
+block content
+  h1(align='center') Edit Archive Entry
+  form(align='left' method='post' enctype='multipart/form-data')
+    span Name
+    br
+    input(name='name' value='#{page.name}' required).form-control
+    br
+    br
+    span Description
+    br
+    textarea(name='description' required).form-control #{page.description}
+    br
+    br
+    span Downloads (optional)
+    br
+    .input-group
+      label.input-group-btn
+        span.btn.btn-default
+          | Browse
+          input(type='file' name='downloads' style='display: none;' multiple)
+      input.form-control(type='text' value='#{page.downloads}' readonly)
+    br
+    br
+    div(align='center')
+      input(type='submit' value='Save').btn

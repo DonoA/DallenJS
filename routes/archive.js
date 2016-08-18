@@ -60,18 +60,49 @@ router.post('/new', upload.array('downloads', 5), function(req, res, next) {
 });
 
 router.get('/:archive/edit', function(req, res, next) {
-  if(req.session.user && req.session.user.admin){
-    res.render('archive/edit', {title: 'Editing ' + req.params.archive});
-  }else{
-    res.redirect('/restricted');
-  }
+    db.archives.findOne({
+      where: {
+        name: req.params.archive
+      }
+    }).then(arch => {
+      arch.getDownloads().then(dls => {
+        arch.downloads = [];
+        Async.each(dls, (i, cb) => {
+          arch.downloads.push(i.name);
+          cb(null);
+        }, err =>{
+          res.render('archive/edit', {title: 'Dallen\'s ' + req.params.prj, page: arch});
+        });
+      });
+    });
 });
 
-router.post('/:archive/edit', function(req, res, next) {
+router.post('/:archive/edit', upload.array('downloads', 5), function(req, res, next) {
   if(req.session.user && req.session.user.admin){
-    console.log(req.body);
-    db.archives.create(req.body).then(rtn => {
-      res.redirect('/archive');
+    db.archives.findOne({
+      where: {
+        name: req.params.archive
+      }
+    }).then(arch => {
+      arch.updateAttributes(req.body).then(arch => {
+        if(req.files.length > 0){
+          arch.setDownloads([]).then(err => {
+            Async.each(req.files, (f, cb) => {
+              db.downloads.create({
+                  name: f.originalname,
+                  url: f.path
+                }).then(dl => {
+                  arch.addDownload(dl);
+                  cb();
+                });
+            }, err => {
+              res.redirect('/archive');
+            });
+          });
+        }else{
+          res.redirect('/archive');
+        }
+      });
     });
   }else{
     res.redirect('/restricted');

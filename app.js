@@ -58,22 +58,20 @@ app.use(session({
     secret: JSON.parse(fs.readFileSync('config.json', 'utf8')).secrets.sessionKey
 }));
 
-var prjtypCache;
-
 app.use(function(req,res,next){
   res.locals.session = req.session;
-  // if(!prjtypCache){
+  if(!db.prjtypCache){
     db.projects.findAll({
       attributes: [[Sequelize.literal('DISTINCT `type`'), 'type']]
     }).then(typs => {
-      prjtypCache = typs;
-      res.locals.prjtyps = prjtypCache;
+      db.prjtypCache = typs;
+      res.locals.prjtyps = db.prjtypCache;
       next();
     });
-  // }else{
-  //   res.locals.prjtyps = prjtypCache;
-  //   next();
-  // }
+  }else{
+    res.locals.prjtyps = db.prjtypCache;
+    next();
+  }
 });
 
 

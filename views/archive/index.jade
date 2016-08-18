@@ -11,8 +11,9 @@ block content
       each item in items
         li
           a#tab-images(data-toggle='tab', href='#card-#{item.name}', onclick="update_toolbar()") #{item.name}
-      li
-        a#tab-images(href='/archive/new') New Archive
+      if session.user && session.user.admin
+        li
+          a#tab-images(href='/archive/new') New Archive
     .container
       .tab-content.content-card
         each item in items

@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "NODE_ENV=development DEBUG=DallenJS:* node ./bin/www",
+    "prod": "node ./bin/www"
   },
   "author": "Dallen",
   "license": "BSD-2-Clause",

@@ -1,4 +1,3 @@
-
 html {
     display: table;
     margin: auto;
@@ -27,12 +26,12 @@ iframe#mapFrame {
 }
 
 .nav-bar {
-  width: 10%;
+  width: 15%;
 }
 
 .content-card {
-  width: 90%;
   float: right;
+  width: 87%;
 }
 
 .archive-edit {
@@ -43,4 +42,12 @@ iframe#mapFrame {
 .viewer-image {
   padding-right: 15px;
   padding-left: 15px;
+}
+
+textarea {
+  resize: vertical;
+}
+
+h3 {
+  margin-top: 10px;
 }

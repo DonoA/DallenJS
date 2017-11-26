@@ -48,7 +48,10 @@ app.use(function(req,res,next){
   res.locals.title = undefined;
   if(!caches.projectTypeCache){
     models.ProjectTypes.findAll({
-      include: [ models.Projects ],
+      include: [{
+        model: models.Projects,
+        order: [ 'id' ]
+      }],
       order: [ 'id' ]
     }).then(types => {
       caches.projectTypeCache = res.locals.projectTypes = types;

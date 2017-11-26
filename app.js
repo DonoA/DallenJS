@@ -11,7 +11,8 @@ var expressLayouts = require('express-ejs-layouts');
 var RedisStore = require('connect-redis')(session);
 var client  = redis.createClient();
 var fs = require('fs');
-var markdown = require("markdown").markdown;
+var showdown  = require('showdown');
+var showdownConv = new showdown.Converter();
 var models = require("./models");
 var caches = require("./models/cache");
 
@@ -43,7 +44,7 @@ app.use(session({
 }));
 
 app.use(function(req,res,next){
-  res.locals.parseMarkdown = markdown.toHTML;
+  res.locals.showdown = showdownConv;
   res.locals.session = req.session;
   res.locals.title = undefined;
   if(!caches.projectTypeCache){

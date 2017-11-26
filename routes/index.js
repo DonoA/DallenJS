@@ -1,11 +1,10 @@
 var express = require('express');
-var db = require("app/dbmanager.js");
+var models = require("../models");
 var router = express.Router();
-var auth = require('app/auth.js');
+var auth = require('../models/auth.js');
 var google = require('googleapis');
 var OAuth2 = google.auth.OAuth2;
 var fs = require('fs');
-var os = require("os");
 
 var google_auth = JSON.parse(fs.readFileSync('config.json', 'utf8')).google_secrets.web;
 
@@ -22,8 +21,6 @@ router.get('/uploads/:path/:name', function(req, res, next) {
   res.download('uploads/'+req.params.path+'/'+req.params.name);
 });
 
-module.exports = router;
-
 router.get('/login', function(req, res, next) {
   if(req.session.user != null){
     req.session.user = null;
@@ -37,11 +34,11 @@ router.get('/login', function(req, res, next) {
 
 router.get('/login/authcallback*', function(req, res, next) {
   var oauthC = new OAuth2(google_auth.client_id, google_auth.client_secret, GLOBAL.http+"://"+req.headers.host+"/login/authcallback");
-  oauthC.getToken(req.query.code, function(err, tokens) {
+  oauthC.getToken(req.query.code, (err, tokens) => {
     if(!err) {
       oauthC.setCredentials(tokens);
-      auth.getUser(oauthC, function(profile){
-        db.users.findOrCreate({
+      auth.getUser(oauthC, profile => {
+        models.Users.findOrCreate({
           where: {
             email: profile.emails[0].value
           },
@@ -50,7 +47,7 @@ router.get('/login/authcallback*', function(req, res, next) {
             email: profile.emails[0].value,
             icon: profile.image.url
           }
-        }).then(function(usr){
+        }).then(usr => {
           req.session.user = {
             name: usr[0].name,
             admin: usr[0].admin
@@ -64,14 +61,21 @@ router.get('/login/authcallback*', function(req, res, next) {
   });
 });
 
-
-
-router.get('/tunnel', function(req, res, next) {
-  res.render('tunnel/index', { title: 'Tunnel' });
+router.get('/uploads/:file', function(req, res, next) {
+  res.download('uploads/' + req.params.file);
 });
 
-// router.get('/upDB', function(req, res, next) {
-//     res.render('home/update', { title: 'Dallen\'s Landing', status: db.pullDB()});
-// });
+router.use('/archive', require('./archive'));
+
+router.use('/project-type/new', require('./project').newProjectRouter);
+
+router.use('/projects/:projectType', function(req, res, next) {
+  models.ProjectTypes.findOne({ 
+    where: {prefix: req.params.projectType} 
+  }).then(type => {
+    req.projectType = type;
+    next();
+  });
+}, require('./project').router);
 
 module.exports = router;

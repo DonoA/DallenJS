@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      <% if(title) { %>
+        <%= title %>
+      <% } else { %>
+        Dallen's Landing
+      <% } %>
+    </title>
+    <%- include('./layouts/head', {}) %>
+  </head>
+  <body>
+    <%- include('./layouts/header', {}) %>
+    <section class="content">
+      <%- body %>
+    </section>
+    <script src="/javascripts/forms.js"></script>
+  </body>
+</html>

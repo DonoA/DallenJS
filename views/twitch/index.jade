@@ -1,9 +1,0 @@
-extends ../layout
-
-block content
-  section.centered
-    h1 Twitch Logger
-    each user in channels
-      a(href='/twitch/#{user}').btn.btn-default.centered #{user}
-    p.
-      The goal of tracking twitch streams it to eventually build a markov bot with the data

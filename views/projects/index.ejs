@@ -1,0 +1,14 @@
+<h1><%= project.name %></h1>
+<hr />
+<div class="container">
+  <div class="tab-content content-card">
+    <div>
+      <% if(project.repo) { %>
+        <a href="<%= project.repo %>">Repository</a>
+      <% } %>
+      <p>
+        <%- parseMarkdown(project.description) %>
+      </p>
+    </div>
+  </div>
+</div>

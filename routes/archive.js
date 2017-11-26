@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var db = require("app/dbmanager.js");
+var models = require("../models");
 var multer  = require('multer');
 var Async = require('async');
 var fs = require('fs');
@@ -17,20 +17,11 @@ var upload = multer({ storage: multer.diskStorage({
   })
 });
 
-
-//This will need some hella caches
 router.get('/', function(req, res, next) {
-    db.archives.findAll({
-      where: {}
+    models.Archives.findAll({
+      include: [models.Downloads]
     }).then(items => {
-      Async.each(items, (i, cb) => {
-        i.getDownloads().then(dls => {
-          i.downloads = dls;
-          cb();
-        });
-      }, err => {
-        res.render('archive/index', { items: items });
-      });
+      res.render('archive/index', { items: items });
     });
 });
 
@@ -44,15 +35,26 @@ router.get('/new', function(req, res, next) {
 
 router.post('/new', upload.array('downloads', 5), function(req, res, next) {
   if(req.session.user && req.session.user.admin){
-    db.archives.create(req.body).then(arch => {
-      Async.each(req.files, (f, cb) => {
-        db.downloads.create({name: f.originalname, url: f.path}).then(dl => {
-          arch.addDownload(dl);
-          cb();
-        });
-      }, err => {
+    req.body.prefix = req.body.name.replace(/\s/g, "");
+    models.Archives.create(req.body).then(arch => {
+      function completeRequest() {
         res.redirect('/archive');
-      });
+      }
+      function commitDownload(i) {
+        if(req.files[i]) {
+          models.Downloads.create({name: req.files[i].originalname, url: req.files[i].path}).then(dl => {
+            arch.addDownload(dl);
+            if(i < req.files.length) {
+              commitDownload(i+1);
+            } else {
+              completeRequest();
+            }
+          });
+        } else {
+          completeRequest();
+        }
+      }
+      commitDownload(0);
     });
   }else{
     res.redirect('/restricted');
@@ -60,7 +62,7 @@ router.post('/new', upload.array('downloads', 5), function(req, res, next) {
 });
 
 router.get('/:archive/edit', function(req, res, next) {
-    db.archives.findOne({
+    models.Archives.findOne({
       where: {
         name: req.params.archive
       }
@@ -79,7 +81,7 @@ router.get('/:archive/edit', function(req, res, next) {
 
 router.post('/:archive/edit', upload.array('downloads', 5), function(req, res, next) {
   if(req.session.user && req.session.user.admin){
-    db.archives.findOne({
+    models.Archives.findOne({
       where: {
         name: req.params.archive
       }
@@ -88,7 +90,7 @@ router.post('/:archive/edit', upload.array('downloads', 5), function(req, res, n
         if(req.files.length > 0){
           arch.setDownloads([]).then(err => {
             Async.each(req.files, (f, cb) => {
-              db.downloads.create({
+              models.Downloads.create({
                   name: f.originalname,
                   url: f.path
                 }).then(dl => {

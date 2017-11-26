@@ -21,7 +21,7 @@ GLOBAL.http = process.env.http || "http"
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '800');
+var port = normalizePort(process.env.PORT || '1100');
 app.set('port', port);
 
 /**

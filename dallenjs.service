@@ -1,0 +1,13 @@
+[Unit]
+Description=DallenJS service
+After=network.target
+
+[Service]
+WorkingDirectory=/srv/DallenJS
+Type=forking
+ExecStart=/home/dallen/.nvm/versions/node/v8.5.0/bin/forever start /srv/DallenJS/bin/forever/production.json
+ExecStop=/home/dallen/.nvm/versions/node/v8.5.0/bin/forever stop DallenJS
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

@@ -13,8 +13,6 @@ var fs = require('fs');
 
 models.init();
 
-// GLOBAL.oauths = [];
-
 GLOBAL.http = process.env.http || "http"
 
 /**

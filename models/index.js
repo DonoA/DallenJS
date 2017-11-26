@@ -82,6 +82,12 @@ var Archive = sequelize.define('archives', {
     },
     description: {
         type: Sequelize.TEXT
+    },
+    repo: {
+        type: Sequelize.STRING
+    },
+    readme: {
+        type: Sequelize.STRING
     }
 }, {
     freezeTableName: true,

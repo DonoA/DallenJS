@@ -11,7 +11,6 @@
   <div class="tab-content content-card">
     <% items.forEach(function(item) { %>
       <div class="tab-pane" id="card-<%= item.prefix %>">
-        <div class="archive-edit"><a class="btn btn-default centered" href="/archive/<%= item.prefix %>/edit">Edit</a></div>
         <h3><%= item.name %></h3>
         <p><%= item.description %></p>
         <% item.downloads.forEach(function(download) { %>

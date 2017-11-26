@@ -12,7 +12,7 @@
     <% items.forEach(function(item) { %>
       <div class="tab-pane" id="card-<%= item.prefix %>">
         <h3><%= item.name %></h3>
-        <p><%= item.description %></p>
+        <p><%- parseMarkdown(item.description) %></p>
         <% if(item.repo) { %>
           <a href="<%= item.repo %>">Repository</a>
         <% } %>

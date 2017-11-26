@@ -44,7 +44,7 @@ app.use(session({
 }));
 
 app.use(function(req,res,next){
-  res.locals.showdown = showdownConv;
+  res.locals.parseMarkdown = showdownConv.makeHtml.bind(showdownConv);
   res.locals.session = req.session;
   res.locals.title = undefined;
   if(!caches.projectTypeCache){

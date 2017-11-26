@@ -7,7 +7,7 @@
         <a href="<%= project.repo %>">Repository</a>
       <% } %>
       <p>
-        <%- showdown.makeHtml(project.description) %>
+        <%- parseMarkdown(project.description) %>
       </p>
     </div>
   </div>

@@ -1,13 +1,16 @@
 [Unit]
-Description=DallenJS service
-After=network.target
+Description=DallenJS
+Requires=After=mysql.service
 
 [Service]
+ExecStart=/home/dallen/.nvm/versions/node/v8.5.0/bin/node /srv/DallenJS/bin/www
 WorkingDirectory=/srv/DallenJS
-Type=forking
-ExecStart=/home/dallen/.nvm/versions/node/v8.5.0/bin/forever start /srv/DallenJS/bin/forever/production.json
-ExecStop=/home/dallen/.nvm/versions/node/v8.5.0/bin/forever stop DallenJS
-Restart=on-failure
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=dallenjs
+Environment=NODE_ENV=production PORT=1100
 
 [Install]
 WantedBy=multi-user.target

@@ -10,7 +10,7 @@ RestartSec=10
 StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=dallenjs
-Environment=NODE_ENV=production PORT=1100
+Environment=NODE_ENV=production PORT=1100 http=https
 
 [Install]
 WantedBy=multi-user.target

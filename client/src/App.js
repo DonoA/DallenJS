@@ -1,26 +1,32 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {Route, Switch, BrowserRouter as Router} from 'react-router-dom';
+import LandingPage from './components/LandingPage';
+import Projects from './components/Projects';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Layout from './components/Layout';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+
+  render() {
+    return (
+      <Router>
+        <CssBaseline />
+        <Switch>
+          <Route path='/projects'
+              render={ () => <Layout><Projects endpoint={ this.API_ENDPOINT } /></Layout>} />
+
+          <Route path='/tools'
+              render={ () => <Layout><span>wow</span></Layout>} />
+
+          <Route path='/archive'
+              render={ () => <Layout><span>wow</span></Layout>} />
+
+          <Route path='/'
+              render={ () => <Layout><LandingPage endpoint={ this.API_ENDPOINT } /></Layout>} />
+        </Switch>
+      </Router>
+    );
+  }
 }
 
 export default App;

@@ -1,7 +1,0 @@
-{
-    "uid": "DallenJS",
-    "append": true,
-    "watch": true,
-    "script": "bin/www",
-    "sourceDir": "/srv/DallenJS"
-}

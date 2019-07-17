@@ -35,7 +35,7 @@ const styles = theme => ({
     width: theme.spacing(20),
   },
   headerLink: {
-    color: 'inherit', 
+    color: 'inherit',
     textDecoration: 'none',
   }
 });
@@ -60,7 +60,7 @@ class App extends React.Component {
           { children }
         </div>
       </React.Fragment>
-      
+
     );
   }
 }

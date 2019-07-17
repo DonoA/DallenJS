@@ -35,8 +35,8 @@ class App extends React.Component {
     return (
         <td className={classes.row}>
           <div className={classes.card}>
-            <h2>Skiff <a className={classes.githubLink} href='https://github.com/DonoA/Skiff'><img className={classes.image} src="/github-circle.svg" /></a></h2>
-            <span>A compiler for the skiff programming language. Inherits strongly from Scala and compiles into portable C code. More words that might be added to the end to see the padding on the text</span>
+            <h2>{this.props.title} <a className={classes.githubLink} href={this.props.link}><img className={classes.image} src="/github-circle.svg" /></a></h2>
+            <span>{this.props.description}</span>
           </div>
         </td>
     );

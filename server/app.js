@@ -1,69 +1,76 @@
-var express = require('express');
-var redis = require("redis");
-var path = require('path');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var session = require('express-session');
-var RedisStore = require('connect-redis')(session);
-var client  = redis.createClient();
-var fs = require('fs');
-var models = require("./models");
-
-var routes = require('./routes/index');
-
-var app = express();
-
-// view engine setup
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
-
-app.use(session({
-  store: new RedisStore({
-    host: "localhost",
-    port: 6379,
-    client: client,
-    saveUninitialized: false,
-    resave: false
-  }),
-  secret: JSON.parse(fs.readFileSync('config.json', 'utf8')).secrets.sessionKey
-}));
-
-app.use('/', routes);
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+const mysql = require('mysql2/promise');
+const concat = require('concat-stream');
+const fs = require('fs');
+const pump = require('pump');
+const fastify = require('fastify')({
+  logger: true
 });
 
-// error handlers
+fastify.register(require('fastify-multipart'));
 
-// development error handler
-// will print stacktrace
-if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: err,
-      layout: 'layouts/error'
+let con;
+
+const generateResource = (name) => {
+  fastify.get(`/${name}`, async (request, reply) => {
+    const [rows, _] = await con.query(`select * from ${name};`);
+    const result = rows.map(row => ({
+      title: row.title,
+      link: row.link,
+      description: row.description
+    }));
+
+    reply.header('Access-Control-Allow-Origin', '*').type('application/json').code(200);
+    return { [name]: result };
+  });
+
+  fastify.post(`/${name}/edit`, async (request, reply) => {
+    const items = JSON.parse(request.body);
+    await con.query(`truncate table ${name};`);
+    asyncForEach(items, async (item, i) => {
+      await con.query(
+        `INSERT INTO ${name} (id, title, link, description) VALUES (?, ?, ?, ?);`,
+        [i, item.title, item.link, item.description]);
     });
+
+    reply.header('Access-Control-Allow-Origin', '*').type('application/json').code(200);
+    return { message: 'OK' };
   });
 }
 
-// production error handler
-// no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {},
-    layout: 'layouts/error'
-  });
-});
+const asyncForEach = async (arr, func) => {
+  for (let i = 0; i < arr.length; i++) {
+    await func(arr[i], i, arr);
+  }
+}
 
-module.exports = app;
+(async () => {
+
+  con = await mysql.createConnection({
+    host: "localhost",
+    user: "dallenjs",
+    password: "password",
+    database: "dallenjs",
+  });
+
+  fastify.post('/uploads', async (req, reply) => {
+    const mp = req.multipart((field, file, filename, encoding, mimetype) => {
+      pump(file, fs.createWriteStream(`uploads/${filename}`));
+    }, (err) => {
+      console.log('upload completed');
+      reply.code(200).send();
+    });
+
+    mp.on('field', (key, value) => {
+      console.log('form-data', key, value);
+    })
+
+  });
+
+  generateResource('projects');
+  generateResource('tools');
+
+  fastify.listen(3030, (err, address) => {
+    if (err) throw err
+    fastify.log.info(`server listening on ${address}`)
+  })
+})();

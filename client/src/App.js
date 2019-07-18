@@ -6,6 +6,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Layout from './components/Layout';
 import Form from './components/Form';
 import ArchiveForm from './components/ArchiveForm';
+import Login from './components/Login';
 
 class App extends React.Component {
   API_ENDPOINT = 'http://localhost:3030'
@@ -32,6 +33,9 @@ class App extends React.Component {
 
           <Route path='/archive'
               render={ () => <Layout><Folder resource={'archive'} endpoint={ this.API_ENDPOINT } linkIcon='/link-variant.svg'/></Layout>} />
+
+          <Route path='/login'
+              render={ () => <Layout><Login endpoint={ this.API_ENDPOINT } /></Layout>} />
 
           <Route path='/'
               render={ () => <Layout><LandingPage endpoint={ this.API_ENDPOINT } /></Layout>} />

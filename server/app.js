@@ -7,12 +7,26 @@ const fastify = require('fastify')({
 });
 
 fastify.register(require('fastify-multipart'));
+fastify.register(require('fastify-cookie'));
 
-let con;
+let sqlConnection;
+
+let config;
+if(process.env.NODE_ENV === 'production') {
+  config = JSON.parse(fs.readFileSync('config.json'));
+} else {
+  config = JSON.parse(fs.readFileSync('config.dev.json'));
+}
+
+const adminCookies = [];
+
+const isAdmin = (req) => {
+  return adminCookies.includes(req.cookies.cookieName);
+}
 
 const generateResource = (name) => {
   fastify.get(`/${name}`, async (request, reply) => {
-    const [rows, _] = await con.query(`select * from ${name};`);
+    const [rows, _] = await sqlConnection.query(`select * from ${name};`);
     const result = rows.map(row => ({
       title: row.title,
       link: row.link,
@@ -25,9 +39,9 @@ const generateResource = (name) => {
 
   fastify.post(`/${name}/edit`, async (request, reply) => {
     const items = JSON.parse(request.body);
-    await con.query(`truncate table ${name};`);
+    await sqlConnection.query(`truncate table ${name};`);
     asyncForEach(items, async (item, i) => {
-      await con.query(
+      await sqlConnection.query(
         `INSERT INTO ${name} (id, title, link, description) VALUES (?, ?, ?, ?);`,
         [i, item.title, item.link, item.description]);
     });
@@ -41,6 +55,21 @@ const generateArchives = () => {
   // fastify.get('/uploads', async (req, reply) => {
 
   // });
+
+  fastify.post('/login', async (req, reply) => {
+    const body = JSON.parse(req.body);
+    if(body.username === config.admin.username &&
+      body.password === config.admin.password) {
+        console.log('Logging in');
+        const totallySecureCookie = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        adminCookies.push(totallySecureCookie);
+        reply.header('Access-Control-Allow-Origin', '*').code(200);
+        return { message: 'OK', cookie: totallySecureCookie };
+    }
+
+    reply.header('Access-Control-Allow-Origin', '*').type('application/json').code(403);
+    return { message: 'FAILED' };
+  });
 
 
   fastify.post('/upload', async (req, reply) => {
@@ -59,7 +88,7 @@ const generateArchives = () => {
   });
 
   fastify.get(`/archive`, async (request, reply) => {
-    const [rows, _] = await con.query(`select * from archives;`);
+    const [rows, _] = await sqlConnection.query(`select * from archives;`);
     const result = rows.map(row => ({
       title: row.title,
       link: row.downloads,
@@ -73,10 +102,10 @@ const generateArchives = () => {
   fastify.post(`/archive/edit`, async (request, reply) => {
     const items = JSON.parse(request.body);
     console.log(items);
-    await con.query(`truncate table archives;`);
+    await sqlConnection.query(`truncate table archives;`);
     asyncForEach(items, async (item, i) => {
       const downloads = item.downloads.map(d => `/uploads/${d}`).join(',');
-      await con.query(
+      await sqlConnection.query(
         `INSERT INTO archives (id, title, downloads, description) VALUES (?, ?, ?, ?);`,
         [i, item.title, downloads, item.description]);
     });
@@ -94,18 +123,13 @@ const asyncForEach = async (arr, func) => {
 
 (async () => {
 
-  con = await mysql.createConnection({
-    host: "localhost",
-    user: "dallenjs",
-    password: "password",
-    database: "dallenjs",
-  });
+  sqlConnection = await mysql.createConnection(config.sqlConn);
 
   generateResource('projects');
   generateResource('tools');
   generateArchives();
 
-  fastify.listen(3030, (err, address) => {
+  fastify.listen(config.port, (err, address) => {
     if (err) throw err
     fastify.log.info(`server listening on ${address}`)
   })

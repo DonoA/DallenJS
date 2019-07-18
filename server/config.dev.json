@@ -1,0 +1,14 @@
+{
+  "admin": {
+    "username": "username",
+    "password": "password"
+  },
+  "sqlConn": {
+    "host": "localhost",
+    "user": "dallenjs",
+    "password": "password",
+    "database": "dallenjs"
+  },
+  "port": 3030,
+  "domain": "localhost"
+}

@@ -32,10 +32,16 @@ class App extends React.Component {
   render() {
     const { classes } = this.props;
 
+    const links = this.props.link.split(',');
+
     return (
         <td className={classes.row}>
           <div className={classes.card}>
-            <h2>{this.props.title} <a className={classes.githubLink} href={this.props.link}><img className={classes.image} src="/github-circle.svg" /></a></h2>
+            <h2>{this.props.title}
+              { links.map((link, i) =>
+                <a key={i} className={classes.githubLink} href={link}>
+                <img className={classes.image} src={this.props.linkIcon} /></a>) }
+            </h2>
             <span>{this.props.description}</span>
           </div>
         </td>

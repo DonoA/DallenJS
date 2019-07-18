@@ -2,3 +2,5 @@ client/node_modules
 server/node_modules
 public/javascripts/Thumbs.db
 server/config.json
+server/uploads/*
+!server/uploads/.gitkeep

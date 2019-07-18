@@ -37,6 +37,55 @@ const generateResource = (name) => {
   });
 }
 
+const generateArchives = () => {
+  // fastify.get('/uploads', async (req, reply) => {
+
+  // });
+
+
+  fastify.post('/upload', async (req, reply) => {
+    await (new Promise((res, rej) => {
+      req.multipart((field, file, filename, encoding, mimetype) => {
+        console.log(filename);
+        pump(file, fs.createWriteStream(`uploads/${filename}`));
+      }, (err) => {
+        console.log('upload completed', err);
+        res();
+      });
+    }));
+
+    reply.header('Access-Control-Allow-Origin', '*').type('application/json').code(200);
+    return { message: 'OK' };
+  });
+
+  fastify.get(`/archive`, async (request, reply) => {
+    const [rows, _] = await con.query(`select * from archives;`);
+    const result = rows.map(row => ({
+      title: row.title,
+      link: row.downloads,
+      description: row.description
+    }));
+
+    reply.header('Access-Control-Allow-Origin', '*').type('application/json').code(200);
+    return { archive: result };
+  });
+
+  fastify.post(`/archive/edit`, async (request, reply) => {
+    const items = JSON.parse(request.body);
+    console.log(items);
+    await con.query(`truncate table archives;`);
+    asyncForEach(items, async (item, i) => {
+      const downloads = item.downloads.map(d => `/uploads/${d}`).join(',');
+      await con.query(
+        `INSERT INTO archives (id, title, downloads, description) VALUES (?, ?, ?, ?);`,
+        [i, item.title, downloads, item.description]);
+    });
+
+    reply.header('Access-Control-Allow-Origin', '*').type('application/json').code(200);
+    return { message: 'OK' };
+  });
+}
+
 const asyncForEach = async (arr, func) => {
   for (let i = 0; i < arr.length; i++) {
     await func(arr[i], i, arr);
@@ -52,22 +101,9 @@ const asyncForEach = async (arr, func) => {
     database: "dallenjs",
   });
 
-  fastify.post('/uploads', async (req, reply) => {
-    const mp = req.multipart((field, file, filename, encoding, mimetype) => {
-      pump(file, fs.createWriteStream(`uploads/${filename}`));
-    }, (err) => {
-      console.log('upload completed');
-      reply.code(200).send();
-    });
-
-    mp.on('field', (key, value) => {
-      console.log('form-data', key, value);
-    })
-
-  });
-
   generateResource('projects');
   generateResource('tools');
+  generateArchives();
 
   fastify.listen(3030, (err, address) => {
     if (err) throw err

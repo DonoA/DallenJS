@@ -44,6 +44,8 @@ class App extends React.Component {
       return lst;
     }, []);
 
+    console.log(this.state.items);
+
     return (
       <div className={classes.contentContainer}>
         <table className={classes.table}>
@@ -51,7 +53,7 @@ class App extends React.Component {
             {items.map((row, i) => {
               return (
                 <tr key={i}>
-                  {row.map((elt, j) => (<ItemCard key={j} title={elt.title} link={elt.link} description={elt.description}/>))}
+                  {row.map((elt, j) => (<ItemCard key={j} title={elt.title} link={elt.link} description={elt.description} linkIcon={this.props.linkIcon}/>))}
                 </tr>
               );
             })}

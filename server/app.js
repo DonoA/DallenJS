@@ -7,7 +7,6 @@ const fastify = require('fastify')({
 });
 
 fastify.register(require('fastify-multipart'));
-fastify.register(require('fastify-cookie'));
 
 let sqlConnection;
 
@@ -18,10 +17,10 @@ if(process.env.NODE_ENV === 'production') {
   config = JSON.parse(fs.readFileSync('config.dev.json'));
 }
 
-const adminCookies = [];
+const adminCookies = ['mcq7pvg8rg1ak7plubh4y'];
 
 const isAdmin = (req) => {
-  return adminCookies.includes(req.cookies.cookieName);
+  return req.query && adminCookies.includes(req.query.auth);
 }
 
 const generateResource = (name) => {
@@ -38,6 +37,10 @@ const generateResource = (name) => {
   });
 
   fastify.post(`/${name}/edit`, async (request, reply) => {
+    if(!isAdmin(request)) {
+      reply.header('Access-Control-Allow-Origin', '*').type('application/json').code(403);
+      return { message: 'FAILED' };
+    }
     const items = JSON.parse(request.body);
     await sqlConnection.query(`truncate table ${name};`);
     asyncForEach(items, async (item, i) => {
@@ -52,15 +55,15 @@ const generateResource = (name) => {
 }
 
 const generateArchives = () => {
-  // fastify.get('/uploads', async (req, reply) => {
-
-  // });
+  fastify.get('/uploads/:fileName', (req, reply) => {
+    const stream = fs.createReadStream(`uploads/${req.params.fileName}`, 'utf8');
+    reply.header('Access-Control-Allow-Origin', '*').code(200).send(stream);
+  });
 
   fastify.post('/login', async (req, reply) => {
     const body = JSON.parse(req.body);
     if(body.username === config.admin.username &&
       body.password === config.admin.password) {
-        console.log('Logging in');
         const totallySecureCookie = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
         adminCookies.push(totallySecureCookie);
         reply.header('Access-Control-Allow-Origin', '*').code(200);
@@ -73,12 +76,15 @@ const generateArchives = () => {
 
 
   fastify.post('/upload', async (req, reply) => {
+    if(!isAdmin(req)) {
+      reply.header('Access-Control-Allow-Origin', '*').type('application/json').code(403);
+      return { message: 'FAILED' };
+    }
     await (new Promise((res, rej) => {
       req.multipart((field, file, filename, encoding, mimetype) => {
-        console.log(filename);
         pump(file, fs.createWriteStream(`uploads/${filename}`));
       }, (err) => {
-        console.log('upload completed', err);
+        console.log('upload completed, error:', err);
         res();
       });
     }));
@@ -100,11 +106,14 @@ const generateArchives = () => {
   });
 
   fastify.post(`/archive/edit`, async (request, reply) => {
+    if(!isAdmin(request)) {
+      reply.header('Access-Control-Allow-Origin', '*').type('application/json').code(403);
+      return { message: 'FAILED' };
+    }
     const items = JSON.parse(request.body);
-    console.log(items);
     await sqlConnection.query(`truncate table archives;`);
     asyncForEach(items, async (item, i) => {
-      const downloads = item.downloads.map(d => `/uploads/${d}`).join(',');
+      const downloads = item.downloads.map(d => `${config.domain}/uploads/${d}`).join(',');
       await sqlConnection.query(
         `INSERT INTO archives (id, title, downloads, description) VALUES (?, ?, ?, ?);`,
         [i, item.title, downloads, item.description]);

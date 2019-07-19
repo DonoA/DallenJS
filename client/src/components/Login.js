@@ -53,7 +53,7 @@ class App extends React.Component {
     }).then(res => res.json())
       .then(res => {
         if(res.message === 'OK') {
-          document.cookie = `session=${res.cookie}`;
+          localStorage.cookie = res.cookie;
           window.location = `/`;
         } else {
           alert('Login Failed');

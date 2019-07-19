@@ -10,5 +10,5 @@
     "database": "dallenjs"
   },
   "port": 3030,
-  "domain": "localhost"
+  "domain": "http://localhost:3030"
 }

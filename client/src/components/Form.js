@@ -71,9 +71,9 @@ class App extends React.Component {
   }
 
   save() {
-    fetch(`${this.props.endpoint}/${this.props.resource}/edit`, {
+    fetch(`${this.props.endpoint}/${this.props.resource}/edit?auth=${localStorage.cookie}`, {
       method: 'POST',
-      body: JSON.stringify(this.state.projects)
+      body: JSON.stringify(this.state.projects),
     })
       .then(res => res.json())
       .then(() => window.location = `/${this.props.resource}`);

@@ -105,9 +105,9 @@ class App extends React.Component {
     const upload = (i, finished) => {
       const fileForm = new FormData();
       fileForm.append('file', allFiles[i]);
-      fetch(`${this.props.endpoint}/upload`, {
+      fetch(`${this.props.endpoint}/upload?auth=${localStorage.cookie}`, {
         method: 'POST',
-        body: fileForm
+        body: fileForm,
       }).then(() => {
         if(i < allFiles.length) {
           upload(i + 1, finished);
@@ -119,7 +119,7 @@ class App extends React.Component {
 
     upload(0, () => {
       console.log('Upload complete');
-      fetch(`${this.props.endpoint}/archive/edit`, {
+      fetch(`${this.props.endpoint}/archive/edit?auth=${localStorage.cookie}`, {
         method: 'POST',
         body: JSON.stringify(entries)
       }).then(res => res.json())

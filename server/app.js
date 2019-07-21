@@ -124,6 +124,56 @@ const generateArchives = () => {
   });
 }
 
+const generateHomePage = () => {
+  const langExclude = ['HTML', 'CSS'];
+
+  let githubCache = null;
+
+  const calcGithubStats = () => {
+    const githubStats = JSON.parse(fs.readFileSync('githubStats.json'));
+    let totalCommits = 0;
+    let adds = 0;
+    let dels = 0;
+    const langStats = {};
+    Object.keys(githubStats).forEach(repo => {
+      const stats = githubStats[repo];
+      const {commits, additions, deletions} = stats.raw;
+      totalCommits += commits;
+      adds += additions;
+      dels += deletions;
+
+      Object.keys(stats.langDiv).forEach(lang => {
+        if(langExclude.includes(lang)) {
+          return;
+        }
+
+        const percent = parseFloat(stats.langDiv[lang].replace('%', ''))/100.0;
+        if(langStats[lang] === undefined) {
+          langStats[lang] = 0;
+        }
+        langStats[lang] += additions * percent;
+      });
+    });
+
+    githubCache = {
+      commits: totalCommits,
+      additions: adds,
+      deletions: dels,
+      repos: Object.keys(githubStats).length,
+      langStats: langStats,
+    };
+  }
+
+  fastify.get(`/github`, async (request, reply) => {
+    if(githubCache === null) {
+      calcGithubStats();
+    }
+
+    reply.header('Access-Control-Allow-Origin', '*').type('application/json').code(200);
+    return { stats: githubCache };
+  });
+};
+
 const asyncForEach = async (arr, func) => {
   for (let i = 0; i < arr.length; i++) {
     await func(arr[i], i, arr);
@@ -137,6 +187,7 @@ const asyncForEach = async (arr, func) => {
   generateResource('projects');
   generateResource('tools');
   generateArchives();
+  generateHomePage();
 
   fastify.listen(config.port, (err, address) => {
     if (err) throw err

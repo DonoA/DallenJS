@@ -1,0 +1,16 @@
+{
+    "me/my-repo": {
+        "raw": {
+            "commits": 239,
+            "additions": 11395,
+            "deletions": 7039
+        },
+        "langDiv": {
+            "Ruby": "32.7%",
+            "HTML": "32.3%",
+            "CSS": "19.9%",
+            "JavaScript": "11.2%",
+            "TypeScript": "3.9%"
+        }
+    }
+}

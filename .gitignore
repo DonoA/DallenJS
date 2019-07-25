@@ -4,4 +4,5 @@ public/javascripts/Thumbs.db
 server/config.json
 server/uploads/*
 !server/uploads/.gitkeep
-server/githubStats.json
+server/stats/*
+!server/stats/statfile.sample.json

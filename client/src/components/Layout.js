@@ -5,11 +5,8 @@ const styles = theme => ({
   root: {
     width: '100%',
     height: '100%',
-    backgroundImage: 'url(\'/bg2.jpg\')',
     flexFlow: 'column',
     display: 'flex',
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: 'cover',
   },
   header: {
     height: '10%',

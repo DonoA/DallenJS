@@ -130,13 +130,23 @@ const generateHomePage = () => {
   let githubCache = null;
 
   const calcGithubStats = () => {
-    const githubStats = JSON.parse(fs.readFileSync('githubStats.json'));
+    const allStatFiles = {};
+    const files = fs.readdirSync('stats');
+    let mostRecentUpdate = 0;
+    files.filter(file => !file.includes('sample')).forEach(file => {
+      const { mtime } = fs.statSync(`stats/${file}`);
+      if(mtime.getTime() > mostRecentUpdate) {
+        mostRecentUpdate = mtime.getTime();
+      }
+      const stats = JSON.parse(fs.readFileSync(`stats/${file}`));
+      Object.assign(allStatFiles, stats);
+    });
     let totalCommits = 0;
     let adds = 0;
     let dels = 0;
     const langStats = {};
-    Object.keys(githubStats).forEach(repo => {
-      const stats = githubStats[repo];
+    Object.keys(allStatFiles).forEach(repo => {
+      const stats = allStatFiles[repo];
       const {commits, additions, deletions} = stats.raw;
       totalCommits += commits;
       adds += additions;
@@ -159,8 +169,9 @@ const generateHomePage = () => {
       commits: totalCommits,
       additions: adds,
       deletions: dels,
-      repos: Object.keys(githubStats).length,
+      repos: Object.keys(allStatFiles).length,
       langStats: langStats,
+      updateTime: mostRecentUpdate,
     };
   }
 

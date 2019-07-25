@@ -8,23 +8,20 @@ const styles = theme => ({
     height: '90%',
     display: 'table',
     textAlign: 'center',
-  },
-  statsContainer: {
-    display: 'table-cell',
-    verticalAlign: 'middle',
+    marginTop: theme.spacing(10),
   },
 });
 
 class App extends React.Component {
 
-  COLORS = [
-    '#b07219',
-    '#f1e05a',
-    '#3572A5',
-    '#f98889',
-    '#c22d40',
-    '#555555',
-  ]
+  COLORS = {
+    Java: '#b07219',
+    JavaScript: '#f1e05a',
+    Python: '#3572A5',
+    Scala: '#f98889',
+    Ruby: '#c22d40',
+    C: '#555555',
+  };
 
   constructor(props) {
     super(props);
@@ -39,6 +36,14 @@ class App extends React.Component {
       .then(res => this.setState({ stats: res.stats }));
   }
 
+  componentDidUpdate() {
+    let pieText = document.getElementById("piechart").getElementsByTagName("text");
+    for(let i = 0; i < pieText.length; i++) {
+      pieText[i].setAttribute("x", 51);
+      pieText[i].setAttribute("y", 51);
+    }
+  }
+
   render() {
     const { classes } = this.props;
 
@@ -51,21 +56,30 @@ class App extends React.Component {
       const langData = Object.keys(sts.langStats)
         .sort((a, b) => sts.langStats[b] - sts.langStats[a])
         .map((lang, i) => {
-          return { title: Math.floor(sts.langStats[lang]), langName: lang, value: sts.langStats[lang], color: this.COLORS[i] }
-        }).slice(0, 6);
+          return {
+            title: Math.floor(sts.langStats[lang]).toLocaleString(),
+            langName: lang,
+            value: sts.langStats[lang],
+            color: this.COLORS[lang] }
+        }).slice(0, 6); // Only select top 6 languages (graph gets too busy otherwise)
 
       statFrag = (
         <React.Fragment>
-          <div>{sts.additions}</div>
-          <div>lines of code contributed on GitHub</div>
-          <div>across {sts.repos} repositories in {sts.commits} commits</div>
+          <div style={{fontSize: '72px', marginBottom: '-20px'}}>{sts.additions.toLocaleString()}</div>
+          <div>lines of code commited to git</div>
+          <div style={{fontSize: '24px', marginTop: '24px'}}>across {sts.repos} repositories in {sts.commits.toLocaleString()} commits</div>
           <br />
-          <span>
+          <div style={{color: 'black', fontSize: '20px', marginBottom: '-70px', marginTop: '35px'}}>
+            Top 6 languages written, hover for line count
+            <br />
+            Stats collected {new Date(sts.updateTime).toLocaleDateString()}
+          </div>
+          <span id="piechart">
             <PieChart
               style={{width: '30%', height: '30%'}}
               data={langData}
               label={({ data, dataIndex }) => {
-                if(dataIndex < 2) {
+                if(dataIndex < 6) {
                   return data[dataIndex].langName + ' ' + Math.floor(data[dataIndex].value/1000) +'k';
                 } else {
                   return data[dataIndex].langName;
@@ -77,7 +91,7 @@ class App extends React.Component {
                 fill: '#121212'
               }}
               radius={35}
-              labelPosition={85}
+              labelPosition={80}
             />
           </span>
         </React.Fragment>
@@ -86,11 +100,9 @@ class App extends React.Component {
 
     return (
       <div className={classes.contentContainer}>
-        <div className={classes.statsContainer}>
           <center>
             {statFrag}
           </center>
-        </div>
       </div>
     );
   }

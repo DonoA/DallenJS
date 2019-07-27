@@ -196,7 +196,7 @@ const asyncForEach = async (arr, func) => {
   sqlConnection = await mysql.createConnection(config.sqlConn);
 
   generateResource('projects');
-  generateResource('tools');
+  // generateResource('tools');
   generateArchives();
   generateHomePage();
 

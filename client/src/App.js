@@ -22,12 +22,6 @@ class App extends React.Component {
           <Route path='/projects'
               render={ () => <Layout><Folder resource={'projects'} endpoint={ this.API_ENDPOINT } linkIcon='/github-circle.svg'/></Layout>} />
 
-          <Route path='/tools/edit'
-              render={ () => <Layout><Form resource={'tools'} endpoint={ this.API_ENDPOINT } /></Layout>} />
-
-          <Route path='/tools'
-              render={ () => <Layout><Folder resource={'tools'} endpoint={ this.API_ENDPOINT } linkIcon='/link-variant.svg'/></Layout>} />
-
           <Route path='/archive/edit'
               render={ () => <Layout><ArchiveForm resource={'archive'} endpoint={ this.API_ENDPOINT } /></Layout>} />
 

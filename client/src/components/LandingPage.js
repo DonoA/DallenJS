@@ -18,8 +18,8 @@ class App extends React.Component {
     Java: '#b07219',
     JavaScript: '#f1e05a',
     Python: '#3572A5',
-    Scala: '#f98889',
-    Ruby: '#c22d40',
+    Ruby: '#f98889',
+    Scala: '#c22d40',
     C: '#555555',
   };
 
@@ -67,12 +67,12 @@ class App extends React.Component {
         <React.Fragment>
           <div style={{fontSize: '72px', marginBottom: '-20px'}}>{sts.additions.toLocaleString()}</div>
           <div>lines of code commited to git</div>
-          <div style={{fontSize: '24px', marginTop: '24px'}}>across {sts.repos} repositories in {sts.commits.toLocaleString()} commits</div>
+          <div style={{fontSize: '24px', marginTop: '24px'}}>{sts.commits.toLocaleString()} commits in {sts.repos} repositories</div>
           <br />
           <div style={{color: 'black', fontSize: '20px', marginBottom: '-70px', marginTop: '35px'}}>
-            Top 6 languages written, hover for line count
+            Top 6 languages, hover for line count
             <br />
-            Stats collected {new Date(sts.updateTime).toLocaleDateString()}
+            Updated {new Date(sts.updateTime).toLocaleDateString()}
           </div>
           <span id="piechart">
             <PieChart

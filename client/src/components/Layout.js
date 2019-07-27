@@ -50,7 +50,6 @@ class App extends React.Component {
               <span className={`${classes.headerItem} ${classes.headerBold}`}><a className={classes.headerLink} href="/">Dallen</a></span>
               <span className={`${classes.headerItem} ${classes.headerSpacer}`}></span>
               <span className={classes.headerItem}><a className={classes.headerLink} href="/projects">Projects</a></span>
-              <span className={classes.headerItem}><a className={classes.headerLink} href="/tools">Tools</a></span>
               <span className={classes.headerItem}><a className={classes.headerLink} href="/archive">Archive</a></span>
             </div>
           </header>

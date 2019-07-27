@@ -17,7 +17,7 @@ if(process.env.NODE_ENV === 'production') {
   config = JSON.parse(fs.readFileSync('config.dev.json'));
 }
 
-const adminCookies = ['mcq7pvg8rg1ak7plubh4y'];
+const adminCookies = [];
 
 const isAdmin = (req) => {
   return req.query && adminCookies.includes(req.query.auth);

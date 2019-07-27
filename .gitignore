@@ -7,3 +7,4 @@ server/uploads/*
 !server/uploads/.gitkeep
 server/stats/*
 !server/stats/statfile.sample.json
+server/database.json

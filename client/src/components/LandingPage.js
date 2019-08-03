@@ -71,8 +71,6 @@ class App extends React.Component {
           <br />
           <div style={{color: 'black', fontSize: '20px', marginBottom: '-70px', marginTop: '35px'}}>
             Top 6 languages, hover for line count
-            <br />
-            Updated {new Date(sts.updateTime).toLocaleDateString()}
           </div>
           <span id="piechart">
             <PieChart

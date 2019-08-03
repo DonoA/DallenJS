@@ -9,7 +9,15 @@ import ArchiveForm from './components/ArchiveForm';
 import Login from './components/Login';
 
 class App extends React.Component {
-  API_ENDPOINT = 'http://localhost:3030'
+
+  constructor(props) {
+    super(props);
+    this.API_ENDPOINT = 'http://localhost:3030';
+
+    if(process.env.NODE_ENV === 'production') {
+      this.API_ENDPOINT = 'https://api.dallen.io'
+    }
+  }
 
   render() {
     return (

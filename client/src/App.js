@@ -30,11 +30,11 @@ class App extends React.Component {
           <Route path='/projects'
               render={ () => <Layout><Folder resource={'projects'} endpoint={ this.API_ENDPOINT } linkIcon='/github-circle.svg'/></Layout>} />
 
-          <Route path='/archive/edit'
+          {/* <Route path='/archive/edit'
               render={ () => <Layout><ArchiveForm resource={'archive'} endpoint={ this.API_ENDPOINT } /></Layout>} />
 
           <Route path='/archive'
-              render={ () => <Layout><Folder resource={'archive'} endpoint={ this.API_ENDPOINT } linkIcon='/link-variant.svg'/></Layout>} />
+              render={ () => <Layout><Folder resource={'archive'} endpoint={ this.API_ENDPOINT } linkIcon='/link-variant.svg'/></Layout>} /> */}
 
           <Route path='/login'
               render={ () => <Layout><Login endpoint={ this.API_ENDPOINT } /></Layout>} />

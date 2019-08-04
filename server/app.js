@@ -197,7 +197,7 @@ const asyncForEach = async (arr, func) => {
 
   generateResource('projects');
   // generateResource('tools');
-  generateArchives();
+  // generateArchives();
   generateHomePage();
 
   fastify.listen(config.port, (err, address) => {

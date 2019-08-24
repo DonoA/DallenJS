@@ -8,8 +8,6 @@ const fastify = require('fastify')({
 
 fastify.register(require('fastify-multipart'));
 
-let sqlConnection;
-
 let config;
 if(process.env.NODE_ENV === 'production') {
   config = JSON.parse(fs.readFileSync('config.json'));
@@ -25,6 +23,7 @@ const isAdmin = (req) => {
 
 const generateResource = (name) => {
   fastify.get(`/${name}`, async (request, reply) => {
+    const sqlConnection = await mysql.createConnection(config.sqlConn);
     const [rows, _] = await sqlConnection.query(`select * from ${name};`);
     const result = rows.map(row => ({
       title: row.title,
@@ -42,6 +41,7 @@ const generateResource = (name) => {
       return { message: 'FAILED' };
     }
     const items = JSON.parse(request.body);
+    const sqlConnection = await mysql.createConnection(config.sqlConn);
     await sqlConnection.query(`truncate table ${name};`);
     asyncForEach(items, async (item, i) => {
       await sqlConnection.query(
@@ -94,6 +94,7 @@ const generateArchives = () => {
   });
 
   fastify.get(`/archive`, async (request, reply) => {
+    const sqlConnection = await mysql.createConnection(config.sqlConn);
     const [rows, _] = await sqlConnection.query(`select * from archives;`);
     const result = rows.map(row => ({
       title: row.title,
@@ -111,6 +112,7 @@ const generateArchives = () => {
       return { message: 'FAILED' };
     }
     const items = JSON.parse(request.body);
+    const sqlConnection = await mysql.createConnection(config.sqlConn);
     await sqlConnection.query(`truncate table archives;`);
     asyncForEach(items, async (item, i) => {
       const downloads = item.downloads.map(d => `${config.domain}/uploads/${d}`).join(',');
@@ -192,8 +194,6 @@ const asyncForEach = async (arr, func) => {
 }
 
 (async () => {
-
-  sqlConnection = await mysql.createConnection(config.sqlConn);
 
   generateResource('projects');
   // generateResource('tools');

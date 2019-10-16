@@ -69,7 +69,7 @@ class App extends React.Component {
           <div>lines of code commited to git</div>
           <div style={{fontSize: '24px', marginTop: '24px'}}>{sts.commits.toLocaleString()} commits in {sts.repos} repositories</div>
           <br />
-          <div style={{color: 'black', fontSize: '20px', marginBottom: '-70px', marginTop: '35px'}}>
+          <div style={{color: 'black', fontSize: '20px', marginBottom: '0px', marginTop: '35px'}}>
             Top 6 languages, hover for line count
           </div>
           <span id="piechart">

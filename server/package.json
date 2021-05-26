@@ -13,7 +13,7 @@
     "db-migrate": "^0.11.6",
     "db-migrate-mysql": "^1.1.10",
     "fastify": "^2.6.0",
-    "fastify-multipart": "^1.0.1",
+    "fastify-multipart": "^1.0.5",
     "mysql2": "^1.6.5",
     "pump": "^3.0.0"
   }

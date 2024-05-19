@@ -1,0 +1,17 @@
+export const projects = [
+  {
+      "title": "",
+      "link": "",
+      "description": ""
+  }
+];
+
+export const stats = {
+    "commits": 0,
+    "additions": 0,
+    "repos": 0,
+    "langStats": {
+        "Java": 0,
+    },
+    "updateTime": 1715488220
+};

@@ -1,0 +1,6 @@
+services:
+  dallenjs:
+    container_name: dallenjs
+    image: registry.dallen.io/dallenjs
+    ports:
+      - 5106:3000
